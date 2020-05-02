@@ -1,3 +1,3 @@
 # Magdala
 
-"Map Algebra" abstraction using GDAL
+Map Algebra in C#
