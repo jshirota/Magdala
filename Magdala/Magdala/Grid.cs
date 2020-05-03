@@ -13,12 +13,12 @@ namespace Magdala
         /// <summary>
         /// Gets the grid metadata.
         /// </summary>
-        public GridInfo Info { get; private set; }
+        public GridInfo Info { get; }
 
         /// <summary>
         /// Gets the grid rows.
         /// </summary>
-        public int[][] Rows { get; private set; }
+        public int[][] Rows { get; }
 
         #region Constructors
 
@@ -28,7 +28,11 @@ namespace Magdala
         /// <param name="file">Input file.</param>
         public Grid(string file)
         {
-            this.Load(file);
+            using (var dataset = Gdal.Open(file, Access.GA_ReadOnly))
+            {
+                this.Info = new GridInfo(dataset);
+                this.Rows = Readrows(dataset).ToArray();
+            }
         }
 
         internal Grid(GridInfo info, IEnumerable<IEnumerable<int>> rows)
@@ -432,71 +436,112 @@ namespace Magdala
         /// </summary>
         /// <param name="size">Size (buffer).</param>
         /// <param name="func">Transformation.</param>
+        /// <param name="circle">If set to true, excludes cells outside of the radius.</param>
         /// <returns>Transformed grid.</returns>
-        public Grid Focal(byte size, Func<int[], int> func)
+        public Grid Focal(byte size, Func<int[], int> func, bool circle = false)
         {
-            var matrix =
-                (from dx in Enumerable.Range(-size, size * 2 + 1)
-                 from dy in Enumerable.Range(-size, size * 2 + 1)
-                 where true // TODO: Filter circle here.
-                 select (dx, dy))
-                 .ToArray();
+            return Focal(this, size, func, circle);
+        }
 
-            var rows = ParallelEnumerable
-                .Range(0, this.Info.Height)
-                .AsOrdered()
-                .Select(h =>
+        /// <summary>
+        /// Provides focal transformation.
+        /// </summary>
+        /// <param name="grid">Input grid.</param>
+        /// <param name="size">Size (buffer).</param>
+        /// <param name="func">Transformation.</param>
+        /// <param name="circle">If set to true, excludes cells outside of the radius.</param>
+        /// <returns>Transformed grid.</returns>
+        public static Grid Focal(Grid grid, byte size, Func<int[], int> func, bool circle = false)
+        {
+            return Focal(grid, Neighbourhood(size, circle), func);
+        }
+
+        /// <summary>
+        /// Provides focal transformation.
+        /// </summary>
+        /// <param name="grid">Input grid.</param>
+        /// <param name="neighbourhood">Neighbourhood.</param>
+        /// <param name="func">Transformation.</param>
+        /// <returns>Transformed grid.</returns>
+        public static Grid Focal(Grid grid, (sbyte dx, sbyte dy)[] neighbourhood, Func<int[], int> func)
+        {
+            return new Grid(grid.Info, Focal(grid, neighbourhood).Select(x => x.Select(func)));
+        }
+
+        /// <summary>
+        /// Provides focal transformation.
+        /// </summary>
+        /// <param name="grid1">First grid.</param>
+        /// <param name="grid2">Second grid.</param>
+        /// <param name="size">Size (buffer).</param>
+        /// <param name="func">Transformation.</param>
+        /// <param name="circle">If set to true, excludes cells outside of the radius.</param>
+        /// <returns>Transformed grid.</returns>
+        public static Grid Focal(Grid grid1, Grid grid2, byte size, Func<int[], int[], int> func, bool circle = false)
+        {
+            return Focal(grid1, grid2, Neighbourhood(size, circle), func);
+        }
+
+        /// <summary>
+        /// Provides focal transformation.
+        /// </summary>
+        /// <param name="grid1">First grid.</param>
+        /// <param name="grid2">Second grid.</param>
+        /// <param name="neighbourhood">Neighbourhood.</param>
+        /// <param name="func">Transformation.</param>
+        /// <returns>Transformed grid.</returns>
+        public static Grid Focal(Grid grid1, Grid grid2, (sbyte dx, sbyte dy)[] neighbourhood, Func<int[], int[], int> func)
+        {
+            return new Grid(grid1.Info, Focal(grid1, neighbourhood).Zip(Focal(grid2, neighbourhood), (x, y) => x.Zip(y, func)));
+        }
+
+        private static (sbyte dx, sbyte dy)[] Neighbourhood(byte size, bool circle)
+        {
+            var sequence = Enumerable.Range(-size, size * 2 + 1).Select(i => (sbyte)i).ToArray();
+
+            return (from dx in sequence
+                    from dy in sequence
+                    where !circle || Math.Pow(dx, 2) + Math.Pow(dy, 2) <= Math.Pow(size, 2)
+                    select (dx, dy)).ToArray();
+        }
+
+        private static IEnumerable<int[][]> Focal(Grid grid, (sbyte dx, sbyte dy)[] neighbourhood)
+        {
+            int[][] Blocks(int h)
+            {
+                var blocks = new List<int[]>();
+
+                for (var w = 0; w < grid.Info.Width; w++)
                 {
-                    var row = new List<int>();
+                    var block = new List<int>();
 
-                    for (var w = 0; w < this.Info.Width; w++)
+                    foreach (var (dx, dy) in neighbourhood)
                     {
-                        var block = new List<int>();
+                        var x = w + dx;
 
-                        foreach (var (dx, dy) in matrix)
+                        if (x > -1 && x < grid.Info.Width)
                         {
-                            var x = w + dx;
+                            var y = h + dy;
 
-                            if (x > -1 && x < this.Info.Width)
+                            if (y > -1 && y < grid.Info.Height)
                             {
-                                var y = h + dy;
-
-                                if (y > -1 && y < this.Info.Height)
-                                {
-                                    block.Add(this.Rows[y][x]);
-                                }
+                                block.Add(grid.Rows[y][x]);
                             }
                         }
-
-                        row.Add(func(block.ToArray()));
                     }
 
-                    return row;
-                });
+                    blocks.Add(block.ToArray());
+                }
 
-            return new Grid(this.Info, rows);
+                return blocks.ToArray();
+            }
+
+            return ParallelEnumerable.Range(0, grid.Info.Height).AsOrdered().Select(Blocks);
         }
 
         #endregion
 
         #region IO
-
-        private static GridInfo ReadInfo(Dataset dataset)
-        {
-            var band = dataset.GetRasterBand(1);
-            var geoTransform = new double[6];
-
-            dataset.GetGeoTransform(geoTransform);
-
-            return new GridInfo
-            {
-                Width = band.XSize,
-                Height = band.YSize,
-                DataType = band.DataType,
-                GeoTransform = geoTransform,
-                Projection = dataset.GetProjection()
-            };
-        }
 
         private static IEnumerable<int[]> Readrows(Dataset dataset)
         {
@@ -509,15 +554,6 @@ namespace Magdala
                 var row = new int[width];
                 band.ReadRaster(0, h, width, 1, row, width, 1, 0, 0);
                 yield return row;
-            }
-        }
-
-        private void Load(string file)
-        {
-            using (var dataset = Gdal.Open(file, Access.GA_ReadOnly))
-            {
-                this.Info = ReadInfo(dataset);
-                this.Rows = Readrows(dataset).ToArray();
             }
         }
 
@@ -592,26 +628,40 @@ namespace Magdala
         /// <summary>
         /// Gets the width.
         /// </summary>
-        public int Width { get; internal set; }
+        public int Width { get; }
 
         /// <summary>
         /// Gets the height.
         /// </summary>
-        public int Height { get; internal set; }
+        public int Height { get; }
 
         /// <summary>
         /// Gets the data type.
         /// </summary>
-        public DataType DataType { get; internal set; }
+        public DataType DataType { get; }
 
         /// <summary>
         /// Gets the geo transform.
         /// </summary>
-        public double[] GeoTransform { get; internal set; }
+        public double[] GeoTransform { get; }
 
         /// <summary>
         /// Gets the projection.
         /// </summary>
-        public string Projection { get; internal set; }
+        public string Projection { get; }
+
+        internal GridInfo(Dataset dataset)
+        {
+            var band = dataset.GetRasterBand(1);
+            var geoTransform = new double[6];
+
+            dataset.GetGeoTransform(geoTransform);
+
+            this.Width = band.XSize;
+            this.Height = band.YSize;
+            this.DataType = band.DataType;
+            this.GeoTransform = geoTransform;
+            this.Projection = dataset.GetProjection();
+        }
     }
 }
