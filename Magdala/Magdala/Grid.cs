@@ -18,7 +18,7 @@ namespace Magdala
         /// <summary>
         /// Gets the grid rows.
         /// </summary>
-        public int[][] Rows { get; }
+        public float[][] Rows { get; }
 
         #region Constructors
 
@@ -35,11 +35,50 @@ namespace Magdala
             }
         }
 
-        internal Grid(GridInfo info, IEnumerable<IEnumerable<int>> rows)
+        internal Grid(GridInfo info, IEnumerable<IEnumerable<float>> rows)
         {
             this.Info = info;
             this.Rows = rows.Select(x => x.ToArray()).ToArray();
         }
+
+        #endregion
+
+        #region Stats
+
+        private float? average;
+
+        /// <summary>
+        /// Gets the average of cell values.
+        /// </summary>
+        public float Average => this.average ?? (float)(this.average = this.Rows.SelectMany(x => x).Average());
+
+        private float? max;
+
+        /// <summary>
+        /// Gets the max cell value.
+        /// </summary>
+        public float Max => this.max ?? (float)(this.max = this.Rows.SelectMany(x => x).Max());
+
+        private float? min;
+
+        /// <summary>
+        /// Gets the min cell value.
+        /// </summary>
+        public float Min => this.min ?? (float)(this.min = this.Rows.SelectMany(x => x).Min());
+
+        private float? range;
+
+        /// <summary>
+        /// Gets the range of cell values.
+        /// </summary>
+        public float Range => this.range ?? (float)(this.range = this.Max - this.Min);
+
+        private float? stDev;
+
+        /// <summary>
+        /// Gets the standard deviation of cell values.
+        /// </summary>
+        public float StDev => this.stDev ?? (float)(this.stDev = StdDev(this.Rows.SelectMany(x => x).ToArray()));
 
         #endregion
 
@@ -51,7 +90,7 @@ namespace Magdala
         /// <param name="grid1">First grid.</param>
         /// <param name="grid2">Second grid.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator +(Grid grid1, Grid grid2) => Local(grid1, grid2, (x, y) => x + y);
+        public static Grid operator +(Grid grid1, Grid grid2) => Local(grid1, grid2, (x, y) => Convert.ToInt16(x + y));
 
         /// <summary>
         /// Addition operation.
@@ -59,7 +98,7 @@ namespace Magdala
         /// <param name="grid">Grid.</param>
         /// <param name="n">Number.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator +(Grid grid, int n) => Local(grid, x => x + n);
+        public static Grid operator +(Grid grid, float n) => Local(grid, x => Convert.ToInt16(x + n));
 
         /// <summary>
         /// Addition operation.
@@ -67,7 +106,7 @@ namespace Magdala
         /// <param name="n">Number.</param>
         /// <param name="grid">Grid.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator +(int n, Grid grid) => Local(grid, x => n + x);
+        public static Grid operator +(float n, Grid grid) => Local(grid, x => Convert.ToInt16(n + x));
 
         /// <summary>
         /// Subtraction operation.
@@ -75,7 +114,7 @@ namespace Magdala
         /// <param name="grid1">First grid.</param>
         /// <param name="grid2">Second grid.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator -(Grid grid1, Grid grid2) => Local(grid1, grid2, (x, y) => x - y);
+        public static Grid operator -(Grid grid1, Grid grid2) => Local(grid1, grid2, (x, y) => Convert.ToInt16(x - y));
 
         /// <summary>
         /// Subtraction operation.
@@ -83,7 +122,7 @@ namespace Magdala
         /// <param name="grid">Grid.</param>
         /// <param name="n">Number.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator -(Grid grid, int n) => Local(grid, x => x - n);
+        public static Grid operator -(Grid grid, float n) => Local(grid, x => Convert.ToInt16(x - n));
 
         /// <summary>
         /// Subtraction operation.
@@ -91,7 +130,7 @@ namespace Magdala
         /// <param name="n">Number.</param>
         /// <param name="grid">Grid.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator -(int n, Grid grid) => Local(grid, x => n - x);
+        public static Grid operator -(float n, Grid grid) => Local(grid, x => Convert.ToInt16(n - x));
 
         /// <summary>
         /// Multiplication operation.
@@ -99,7 +138,7 @@ namespace Magdala
         /// <param name="grid1">First grid.</param>
         /// <param name="grid2">Second grid.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator *(Grid grid1, Grid grid2) => Local(grid1, grid2, (x, y) => x * y);
+        public static Grid operator *(Grid grid1, Grid grid2) => Local(grid1, grid2, (x, y) => Convert.ToInt16(x * y));
 
         /// <summary>
         /// Multiplication operation.
@@ -107,7 +146,7 @@ namespace Magdala
         /// <param name="grid">Grid.</param>
         /// <param name="n">Number.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator *(Grid grid, int n) => Local(grid, x => x * n);
+        public static Grid operator *(Grid grid, float n) => Local(grid, x => Convert.ToInt16(x * n));
 
         /// <summary>
         /// Multiplication operation.
@@ -115,7 +154,7 @@ namespace Magdala
         /// <param name="n">Number.</param>
         /// <param name="grid">Grid.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator *(int n, Grid grid) => Local(grid, x => n * x);
+        public static Grid operator *(float n, Grid grid) => Local(grid, x => Convert.ToInt16(n * x));
 
         /// <summary>
         /// Division operation.
@@ -123,7 +162,7 @@ namespace Magdala
         /// <param name="grid1">First grid.</param>
         /// <param name="grid2">Second grid.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator /(Grid grid1, Grid grid2) => Local(grid1, grid2, (x, y) => x / y);
+        public static Grid operator /(Grid grid1, Grid grid2) => Local(grid1, grid2, (x, y) => Convert.ToInt16(x / y));
 
         /// <summary>
         /// Division operation.
@@ -131,7 +170,7 @@ namespace Magdala
         /// <param name="grid">Grid.</param>
         /// <param name="n">Number.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator /(Grid grid, int n) => Local(grid, x => x / n);
+        public static Grid operator /(Grid grid, float n) => Local(grid, x => Convert.ToInt16(x / n));
 
         /// <summary>
         /// Division operation.
@@ -139,7 +178,7 @@ namespace Magdala
         /// <param name="n">Number.</param>
         /// <param name="grid">Grid.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator /(int n, Grid grid) => Local(grid, x => n / x);
+        public static Grid operator /(float n, Grid grid) => Local(grid, x => Convert.ToInt16(n / x));
 
         /// <summary>
         /// Equality operation.
@@ -155,7 +194,7 @@ namespace Magdala
         /// <param name="grid">Grid.</param>
         /// <param name="n">Number.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator ==(Grid grid, int n) => Local(grid, x => x == n ? 1 : 0);
+        public static Grid operator ==(Grid grid, float n) => Local(grid, x => x == n ? 1 : 0);
 
         /// <summary>
         /// Equality operation.
@@ -163,7 +202,7 @@ namespace Magdala
         /// <param name="n">Number.</param>
         /// <param name="grid">Grid.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator ==(int n, Grid grid) => Local(grid, x => n == x ? 1 : 0);
+        public static Grid operator ==(float n, Grid grid) => Local(grid, x => n == x ? 1 : 0);
 
         /// <summary>
         /// Inequality operation.
@@ -179,7 +218,7 @@ namespace Magdala
         /// <param name="grid">Grid.</param>
         /// <param name="n">Number.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator !=(Grid grid, int n) => Local(grid, x => x != n ? 1 : 0);
+        public static Grid operator !=(Grid grid, float n) => Local(grid, x => x != n ? 1 : 0);
 
         /// <summary>
         /// Inequality operation.
@@ -187,7 +226,7 @@ namespace Magdala
         /// <param name="n">Number.</param>
         /// <param name="grid">Grid.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator !=(int n, Grid grid) => Local(grid, x => n != x ? 1 : 0);
+        public static Grid operator !=(float n, Grid grid) => Local(grid, x => n != x ? 1 : 0);
 
         /// <summary>
         /// Greater than operation.
@@ -203,7 +242,7 @@ namespace Magdala
         /// <param name="grid">Grid.</param>
         /// <param name="n">Number.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator >(Grid grid, int n) => Local(grid, x => x > n ? 1 : 0);
+        public static Grid operator >(Grid grid, float n) => Local(grid, x => x > n ? 1 : 0);
 
         /// <summary>
         /// Greater than operation.
@@ -211,7 +250,7 @@ namespace Magdala
         /// <param name="n">Number.</param>
         /// <param name="grid">Grid.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator >(int n, Grid grid) => Local(grid, x => n > x ? 1 : 0);
+        public static Grid operator >(float n, Grid grid) => Local(grid, x => n > x ? 1 : 0);
 
         /// <summary>
         /// Less than operation.
@@ -227,7 +266,7 @@ namespace Magdala
         /// <param name="grid">Grid.</param>
         /// <param name="n">Number.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator <(Grid grid, int n) => Local(grid, x => x < n ? 1 : 0);
+        public static Grid operator <(Grid grid, float n) => Local(grid, x => x < n ? 1 : 0);
 
         /// <summary>
         /// Less than operation.
@@ -235,7 +274,7 @@ namespace Magdala
         /// <param name="n">Number.</param>
         /// <param name="grid">Grid.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator <(int n, Grid grid) => Local(grid, x => n < x ? 1 : 0);
+        public static Grid operator <(float n, Grid grid) => Local(grid, x => n < x ? 1 : 0);
 
         /// <summary>
         /// Greater than or equal to operation.
@@ -251,7 +290,7 @@ namespace Magdala
         /// <param name="grid">Grid.</param>
         /// <param name="n">Number.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator >=(Grid grid, int n) => Local(grid, x => x >= n ? 1 : 0);
+        public static Grid operator >=(Grid grid, float n) => Local(grid, x => x >= n ? 1 : 0);
 
         /// <summary>
         /// Greater than or equal to operation.
@@ -259,7 +298,7 @@ namespace Magdala
         /// <param name="n">Number.</param>
         /// <param name="grid">Grid.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator >=(int n, Grid grid) => Local(grid, x => n >= x ? 1 : 0);
+        public static Grid operator >=(float n, Grid grid) => Local(grid, x => n >= x ? 1 : 0);
 
         /// <summary>
         /// Less than or equal to operation.
@@ -275,7 +314,7 @@ namespace Magdala
         /// <param name="grid">Grid.</param>
         /// <param name="n">Number.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator <=(Grid grid, int n) => Local(grid, x => x <= n ? 1 : 0);
+        public static Grid operator <=(Grid grid, float n) => Local(grid, x => x <= n ? 1 : 0);
 
         /// <summary>
         /// Less than or equal to operation.
@@ -283,7 +322,7 @@ namespace Magdala
         /// <param name="n">Number.</param>
         /// <param name="grid">Grid.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator <=(int n, Grid grid) => Local(grid, x => n <= x ? 1 : 0);
+        public static Grid operator <=(float n, Grid grid) => Local(grid, x => n <= x ? 1 : 0);
 
         /// <summary>
         /// Modulus operation.
@@ -291,7 +330,7 @@ namespace Magdala
         /// <param name="grid1">First grid.</param>
         /// <param name="grid2">Second grid.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator %(Grid grid1, Grid grid2) => Local(grid1, grid2, (x, y) => x % y);
+        public static Grid operator %(Grid grid1, Grid grid2) => Local(grid1, grid2, (x, y) => Convert.ToInt16(x % y));
 
         /// <summary>
         /// Modulus operation.
@@ -299,7 +338,7 @@ namespace Magdala
         /// <param name="grid">Grid.</param>
         /// <param name="n">Number.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator %(Grid grid, int n) => Local(grid, x => x % n);
+        public static Grid operator %(Grid grid, float n) => Local(grid, x => Convert.ToInt16(x % n));
 
         /// <summary>
         /// Modulus operation.
@@ -307,7 +346,7 @@ namespace Magdala
         /// <param name="n">Number.</param>
         /// <param name="grid">Grid.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator %(int n, Grid grid) => Local(grid, x => n % x);
+        public static Grid operator %(float n, Grid grid) => Local(grid, x => Convert.ToInt16(n % x));
 
         /// <summary>
         /// Logical "AND" operation.
@@ -334,7 +373,7 @@ namespace Magdala
         /// </summary>
         /// <param name="func">Transformation.</param>
         /// <returns>Transformed grid.</returns>
-        public Grid Local(Func<int, int> func)
+        public Grid Local(Func<float, float> func)
         {
             return Local(this, func);
         }
@@ -345,7 +384,7 @@ namespace Magdala
         /// <param name="grid">Input grid.</param>
         /// <param name="func">Transformation.</param>
         /// <returns>Transformed grid.</returns>
-        public static Grid Local(Grid grid, Func<int, int> func)
+        public static Grid Local(Grid grid, Func<float, float> func)
         {
             return new Grid(grid.Info, grid.Rows.Select(x => x.Select(func)));
         }
@@ -357,7 +396,7 @@ namespace Magdala
         /// <param name="grid2">Second grid.</param>
         /// <param name="func">Transformation.</param>
         /// <returns>Transformed grid.</returns>
-        public static Grid Local(Grid grid1, Grid grid2, Func<int, int, int> func)
+        public static Grid Local(Grid grid1, Grid grid2, Func<float, float, float> func)
         {
             return new Grid(grid1.Info, grid1.Rows.Zip(grid2.Rows, (x, y) => x.Zip(y, func)));
         }
@@ -370,7 +409,7 @@ namespace Magdala
         /// <param name="grid3">Third grid.</param>
         /// <param name="func">Transformation.</param>
         /// <returns>Transformed grid.</returns>
-        public static Grid Local(Grid grid1, Grid grid2, Grid grid3, Func<int, int, int, int> func)
+        public static Grid Local(Grid grid1, Grid grid2, Grid grid3, Func<float, float, float, float> func)
         {
             var rows = grid1.Rows
                 .Zip(grid2.Rows, (x, y) => x.Zip(y, (a, b) => (a, b)))
@@ -398,7 +437,7 @@ namespace Magdala
         /// <param name="trueGrid">Value returned when the predicate evaluates to true.</param>
         /// <param name="falseValue">Value returned when the predicate evaluates to false.</param>
         /// <returns>Transformed grid.</returns>
-        public static Grid Con(Grid predicate, Grid trueGrid, int falseValue)
+        public static Grid Con(Grid predicate, Grid trueGrid, float falseValue)
         {
             return Local(predicate, trueGrid, (x, y) => x == 1 ? y : falseValue);
         }
@@ -410,7 +449,7 @@ namespace Magdala
         /// <param name="trueValue">Value returned when the predicate evaluates to true.</param>
         /// <param name="falseGrid">Value returned when the predicate evaluates to false.</param>
         /// <returns>Transformed grid.</returns>
-        public static Grid Con(Grid predicate, int trueValue, Grid falseGrid)
+        public static Grid Con(Grid predicate, float trueValue, Grid falseGrid)
         {
             return Local(predicate, falseGrid, (x, y) => x == 1 ? trueValue : y);
         }
@@ -422,7 +461,7 @@ namespace Magdala
         /// <param name="trueValue">Value returned when the predicate evaluates to true.</param>
         /// <param name="falseValue">Value returned when the predicate evaluates to false.</param>
         /// <returns>Transformed grid.</returns>
-        public static Grid Con(Grid predicate, int trueValue, int falseValue)
+        public static Grid Con(Grid predicate, float trueValue, float falseValue)
         {
             return Local(predicate, x => x == 1 ? trueValue : falseValue);
         }
@@ -434,37 +473,98 @@ namespace Magdala
         /// <summary>
         /// Provides focal transformation.
         /// </summary>
-        /// <param name="size">Size (buffer).</param>
         /// <param name="func">Transformation.</param>
+        /// <param name="size">Size (buffer).</param>
         /// <param name="circle">If set to true, excludes cells outside of the radius.</param>
         /// <returns>Transformed grid.</returns>
-        public Grid Focal(byte size, Func<int[], int> func, bool circle = false)
+        public Grid Focal(Func<float[], float> func, byte size, bool circle = false)
         {
-            return Focal(this, size, func, circle);
+            return Focal(this, func, size, circle);
+        }
+
+        /// <summary>
+        /// Focal average transformation.
+        /// </summary>
+        /// <param name="size">Size (buffer).</param>
+        /// <param name="circle">If set to true, excludes cells outside of the radius.</param>
+        /// <returns>Transformed grid.</returns>
+        public Grid FocalAverage(byte size, bool circle = false)
+        {
+            return Focal(this, x => x.Average(), size, circle);
+        }
+
+        /// <summary>
+        /// Focal max transformation.
+        /// </summary>
+        /// <param name="size">Size (buffer).</param>
+        /// <param name="circle">If set to true, excludes cells outside of the radius.</param>
+        /// <returns>Transformed grid.</returns>
+        public Grid FocalMax(byte size, bool circle = false)
+        {
+            return Focal(this, x => x.Max(), size, circle);
+        }
+
+        /// <summary>
+        /// Focal min transformation.
+        /// </summary>
+        /// <param name="size">Size (buffer).</param>
+        /// <param name="circle">If set to true, excludes cells outside of the radius.</param>
+        /// <returns>Transformed grid.</returns>
+        public Grid FocalMin(byte size, bool circle = false)
+        {
+            return Focal(this, x => x.Min(), size, circle);
+        }
+
+        /// <summary>
+        /// Focal range transformation.
+        /// </summary>
+        /// <param name="size">Size (buffer).</param>
+        /// <param name="circle">If set to true, excludes cells outside of the radius.</param>
+        /// <returns>Transformed grid.</returns>
+        public Grid FocalRange(byte size, bool circle = false)
+        {
+            return Focal(this, x => x.Max() - x.Min(), size, circle);
+        }
+
+        /// <summary>
+        /// Focal standard deviation transformation.
+        /// </summary>
+        /// <param name="size">Size (buffer).</param>
+        /// <param name="circle">If set to true, excludes cells outside of the radius.</param>
+        /// <returns>Transformed grid.</returns>
+        public Grid FocalStDev(byte size, bool circle = false)
+        {
+            return Focal(this, x => StdDev(x), size, circle);
+        }
+
+        private static float StdDev(float[] values)
+        {
+            var mean = values.Average();
+            return (float)Math.Sqrt(values.Sum(x => (x - mean) * (x - mean)) / values.Length);
+        }
+
+        /// <summary>
+        /// Focal sum transformation.
+        /// </summary>
+        /// <param name="size">Size (buffer).</param>
+        /// <param name="circle">If set to true, excludes cells outside of the radius.</param>
+        /// <returns>Transformed grid.</returns>
+        public Grid FocalSum(byte size, bool circle = false)
+        {
+            return Focal(this, x => x.Sum(), size, circle);
         }
 
         /// <summary>
         /// Provides focal transformation.
         /// </summary>
         /// <param name="grid">Input grid.</param>
-        /// <param name="size">Size (buffer).</param>
         /// <param name="func">Transformation.</param>
+        /// <param name="size">Size (buffer).</param>
         /// <param name="circle">If set to true, excludes cells outside of the radius.</param>
         /// <returns>Transformed grid.</returns>
-        public static Grid Focal(Grid grid, byte size, Func<int[], int> func, bool circle = false)
+        public static Grid Focal(Grid grid, Func<float[], float> func, byte size, bool circle = false)
         {
-            return Focal(grid, Neighbourhood(size, circle), func);
-        }
-
-        /// <summary>
-        /// Provides focal transformation.
-        /// </summary>
-        /// <param name="grid">Input grid.</param>
-        /// <param name="neighbourhood">Neighbourhood.</param>
-        /// <param name="func">Transformation.</param>
-        /// <returns>Transformed grid.</returns>
-        public static Grid Focal(Grid grid, (sbyte dx, sbyte dy)[] neighbourhood, Func<int[], int> func)
-        {
+            var neighbourhood = Neighbourhood(size, circle);
             return new Grid(grid.Info, Focal(grid, neighbourhood).Select(x => x.Select(func)));
         }
 
@@ -473,31 +573,19 @@ namespace Magdala
         /// </summary>
         /// <param name="grid1">First grid.</param>
         /// <param name="grid2">Second grid.</param>
-        /// <param name="size">Size (buffer).</param>
         /// <param name="func">Transformation.</param>
+        /// <param name="size">Size (buffer).</param>
         /// <param name="circle">If set to true, excludes cells outside of the radius.</param>
         /// <returns>Transformed grid.</returns>
-        public static Grid Focal(Grid grid1, Grid grid2, byte size, Func<int[], int[], int> func, bool circle = false)
+        public static Grid Focal(Grid grid1, Grid grid2, Func<float[], float[], float> func, byte size, bool circle = false)
         {
-            return Focal(grid1, grid2, Neighbourhood(size, circle), func);
-        }
-
-        /// <summary>
-        /// Provides focal transformation.
-        /// </summary>
-        /// <param name="grid1">First grid.</param>
-        /// <param name="grid2">Second grid.</param>
-        /// <param name="neighbourhood">Neighbourhood.</param>
-        /// <param name="func">Transformation.</param>
-        /// <returns>Transformed grid.</returns>
-        public static Grid Focal(Grid grid1, Grid grid2, (sbyte dx, sbyte dy)[] neighbourhood, Func<int[], int[], int> func)
-        {
+            var neighbourhood = Neighbourhood(size, circle);
             return new Grid(grid1.Info, Focal(grid1, neighbourhood).Zip(Focal(grid2, neighbourhood), (x, y) => x.Zip(y, func)));
         }
 
-        private static (sbyte dx, sbyte dy)[] Neighbourhood(byte size, bool circle)
+        private static (int dx, int dy)[] Neighbourhood(byte size, bool circle)
         {
-            var sequence = Enumerable.Range(-size, size * 2 + 1).Select(i => (sbyte)i).ToArray();
+            var sequence = Enumerable.Range(-size, size * 2 + 1).ToArray();
 
             return (from dx in sequence
                     from dy in sequence
@@ -505,15 +593,15 @@ namespace Magdala
                     select (dx, dy)).ToArray();
         }
 
-        private static IEnumerable<int[][]> Focal(Grid grid, (sbyte dx, sbyte dy)[] neighbourhood)
+        private static IEnumerable<float[][]> Focal(Grid grid, (int dx, int dy)[] neighbourhood)
         {
-            int[][] Blocks(int h)
+            for (var h = 0; h < grid.Info.Height; h++)
             {
-                var blocks = new List<int[]>();
+                var blocks = new List<float[]>();
 
                 for (var w = 0; w < grid.Info.Width; w++)
                 {
-                    var block = new List<int>();
+                    var block = new List<float>();
 
                     foreach (var (dx, dy) in neighbourhood)
                     {
@@ -533,17 +621,15 @@ namespace Magdala
                     blocks.Add(block.ToArray());
                 }
 
-                return blocks.ToArray();
+                yield return blocks.ToArray();
             }
-
-            return ParallelEnumerable.Range(0, grid.Info.Height).AsOrdered().Select(Blocks);
         }
 
         #endregion
 
         #region IO
 
-        private static IEnumerable<int[]> Readrows(Dataset dataset)
+        private static IEnumerable<float[]> Readrows(Dataset dataset)
         {
             var band = dataset.GetRasterBand(1);
             var width = band.XSize;
@@ -551,7 +637,7 @@ namespace Magdala
 
             for (var h = 0; h < height; h++)
             {
-                var row = new int[width];
+                var row = new float[width];
                 band.ReadRaster(0, h, width, 1, row, width, 1, 0, 0);
                 yield return row;
             }
@@ -561,12 +647,14 @@ namespace Magdala
         /// Saves the grid.
         /// </summary>
         /// <param name="file">File name.</param>
-        public void Save(string file)
+        /// <param name="preserveFloatPoint">If set to true, preserves floating-point cell values.</param>
+        public void Save(string file, bool preserveFloatPoint = false)
         {
             var width = this.Info.Width;
             var height = this.Info.Height;
+            var dataType = preserveFloatPoint ? DataType.GDT_Float32 : DataType.GDT_Int16;
 
-            using (var dataset = Gdal.GetDriverByName("GTiff").Create(file, width, height, 1, this.Info.DataType, null))
+            using (var dataset = Gdal.GetDriverByName("GTiff").Create(file, width, height, 1, dataType, null))
             {
                 dataset.SetGeoTransform(this.Info.GeoTransform);
                 dataset.SetProjection(this.Info.Projection);
@@ -601,19 +689,19 @@ namespace Magdala
         ///<inheritdoc/>
         public override string ToString()
         {
-            return this.ToString(10, 10);
+            return this.ToString(0, 0, 10, 10);
         }
 
         /// <summary>
         /// Returns a string that represents the current object.
         /// </summary>
-        /// <param name="xSize">X size.</param>
-        /// <param name="ySize">Y size.</param>
         /// <param name="xOff">X offset.</param>
         /// <param name="yOff">Y offset.</param>
+        /// <param name="xSize">X size.</param>
+        /// <param name="ySize">Y size.</param>
         /// <param name="replace">Replace function.</param>
         /// <returns>A string that represents the current object.</returns>
-        public string ToString(int xSize, int ySize, int xOff = 0, int yOff = 0, Func<int, string> replace = null)
+        public string ToString(int xOff, int yOff, int xSize = 10, int ySize = 10, Func<float, string> replace = null)
         {
             return string.Join("\r\n", this.Rows.Skip(yOff).Take(ySize).Select(x =>
                 string.Join(" ", x.Skip(xOff).Take(xSize).Select(replace ?? (y => y.ToString())))));
@@ -636,11 +724,6 @@ namespace Magdala
         public int Height { get; }
 
         /// <summary>
-        /// Gets the data type.
-        /// </summary>
-        public DataType DataType { get; }
-
-        /// <summary>
         /// Gets the geo transform.
         /// </summary>
         public double[] GeoTransform { get; }
@@ -659,7 +742,6 @@ namespace Magdala
 
             this.Width = band.XSize;
             this.Height = band.YSize;
-            this.DataType = band.DataType;
             this.GeoTransform = geoTransform;
             this.Projection = dataset.GetProjection();
         }
