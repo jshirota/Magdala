@@ -22,17 +22,20 @@ namespace Magdala
 
         #region Constructors
 
+        static Grid()
+        {
+            Gdal.AllRegister();
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Grid"/> class.
         /// </summary>
         /// <param name="file">Input file.</param>
         public Grid(string file)
         {
-            using (var dataset = Gdal.Open(file, Access.GA_ReadOnly))
-            {
-                this.Info = new GridInfo(dataset);
-                this.Rows = Readrows(dataset).ToArray();
-            }
+            using var dataset = Gdal.Open(file, Access.GA_ReadOnly);
+            this.Info = new GridInfo(dataset);
+            this.Rows = Readrows(dataset).ToArray();
         }
 
         internal Grid(GridInfo info, IEnumerable<IEnumerable<float>> rows)
@@ -654,43 +657,30 @@ namespace Magdala
             var height = this.Info.Height;
             var dataType = preserveFloatPoint ? DataType.GDT_Float32 : DataType.GDT_Int16;
 
-            using (var dataset = Gdal.GetDriverByName("GTiff").Create(file, width, height, 1, dataType, null))
-            {
-                dataset.SetGeoTransform(this.Info.GeoTransform);
-                dataset.SetProjection(this.Info.Projection);
+            using var dataset = Gdal.GetDriverByName("GTiff").Create(file, width, height, 1, dataType, null);
+            dataset.SetGeoTransform(this.Info.GeoTransform);
+            dataset.SetProjection(this.Info.Projection);
 
-                var band = dataset.GetRasterBand(1);
+            var band = dataset.GetRasterBand(1);
 
-                var h = 0;
+            var h = 0;
 
-                foreach (var row in this.Rows)
-                {
-                    band.WriteRaster(0, h++, width, 1, row, width, 1, 0, 0);
-                }
+            foreach (var row in this.Rows)
+                band.WriteRaster(0, h++, width, 1, row, width, 1, 0, 0);
 
-                dataset.FlushCache();
-            }
+            dataset.FlushCache();
         }
 
         #endregion
 
         ///<inheritdoc/>
-        public override bool Equals(object obj)
-        {
-            return base.Equals(obj);
-        }
+        public override bool Equals(object obj) => base.Equals(obj);
 
         ///<inheritdoc/>
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
+        public override int GetHashCode() => base.GetHashCode();
 
         ///<inheritdoc/>
-        public override string ToString()
-        {
-            return this.ToString(0, 0, 10, 10);
-        }
+        public override string ToString() => this.ToString(0, 0, 10, 10);
 
         /// <summary>
         /// Returns a string that represents the current object.
@@ -701,7 +691,7 @@ namespace Magdala
         /// <param name="ySize">Y size.</param>
         /// <param name="replace">Replace function.</param>
         /// <returns>A string that represents the current object.</returns>
-        public string ToString(int xOff, int yOff, int xSize = 10, int ySize = 10, Func<float, string> replace = null)
+        public string ToString(int xOff = 0, int yOff = 0, int xSize = 10, int ySize = 10, Func<float, string> replace = null)
         {
             return string.Join("\r\n", this.Rows.Skip(yOff).Take(ySize).Select(x =>
                 string.Join(" ", x.Skip(xOff).Take(xSize).Select(replace ?? (y => y.ToString())))));
