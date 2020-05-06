@@ -14,8 +14,6 @@ namespace TestApp
                 gosper = Tick(gosper);
                 Console.WriteLine(gosper.ToString(xSize: 50, ySize: 30, replace: n => n == 0 ? " " : "*"));
             }
-
-            Console.ReadLine();
         }
 
         static Grid Tick(Grid grid)
