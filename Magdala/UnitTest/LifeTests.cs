@@ -6,22 +6,16 @@ using Magdala;
 namespace UnitTest
 {
     [TestClass]
-    public class GridTests
+    public class LifeTests
     {
+        private readonly Grid life = new Grid(@"Data\life.tif");
+
         [TestMethod]
         public void Info()
         {
-            var dem = new Grid(@"Data\dem.tif");
-
-            Assert.AreEqual(3601, dem.Info.Width);
-            Assert.AreEqual(3601, dem.Info.Height);
-            Assert.AreEqual(@"GEOGCS[""WGS 84"",DATUM[""WGS_1984"",SPHEROID[""WGS 84"",6378137,298.257223563,AUTHORITY[""EPSG"",""7030""]],AUTHORITY[""EPSG"",""6326""]],PRIMEM[""Greenwich"",0],UNIT[""degree"",0.0174532925199433],AUTHORITY[""EPSG"",""4326""]]", dem.Info.Projection);
-
-            var life = new Grid(@"Data\life.tif");
-
-            Assert.AreEqual(50, life.Info.Width);
-            Assert.AreEqual(35, life.Info.Height);
-            Assert.AreEqual("", life.Info.Projection);
+            Assert.AreEqual(50, this.life.Info.Width);
+            Assert.AreEqual(35, this.life.Info.Height);
+            Assert.AreEqual("", this.life.Info.Projection);
         }
 
         [TestMethod]
@@ -33,7 +27,7 @@ namespace UnitTest
                 return grid == 1 & g == 2 | g == 3;
             }
 
-            var life = new Grid(@"Data\life.tif");
+            var life = this.life;
             var iterations = 1000;
 
             // Fill the canvas.
