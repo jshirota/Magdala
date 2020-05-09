@@ -16,14 +16,31 @@
         </member>
         <member name="P:Magdala.Grid.Rows">
             <summary>
-            Gets the grid rows.
+            Gets the rows.
             </summary>
         </member>
-        <member name="M:Magdala.Grid.#ctor(System.String)">
+        <member name="M:Magdala.Grid.#ctor(System.String,System.Int32)">
             <summary>
             Initializes a new instance of the <see cref="T:Magdala.Grid"/> class.
             </summary>
             <param name="file">Input file.</param>
+            <param name="band">Band number.</param>
+        </member>
+        <member name="P:Magdala.Grid.Item(System.Int32,System.Int32)">
+            <summary>
+            Gets the cell value based on the indices.
+            </summary>
+            <param name="x">X index.</param>
+            <param name="y">Y index.</param>
+            <returns>Cell value.</returns>
+        </member>
+        <member name="P:Magdala.Grid.Item(System.Double,System.Double)">
+            <summary>
+            Gets the cell value based on the coordinates.
+            </summary>
+            <param name="x">X coordinate.</param>
+            <param name="y">Y coordinate.</param>
+            <returns>Cell value.</returns>
         </member>
         <member name="P:Magdala.Grid.Average">
             <summary>
@@ -58,7 +75,7 @@
             <param name="grid2">Second grid.</param>
             <returns>Output grid.</returns>
         </member>
-        <member name="M:Magdala.Grid.op_Addition(Magdala.Grid,System.Single)">
+        <member name="M:Magdala.Grid.op_Addition(Magdala.Grid,System.Nullable{System.Single})">
             <summary>
             Addition operation.
             </summary>
@@ -66,7 +83,7 @@
             <param name="n">Number.</param>
             <returns>Output grid.</returns>
         </member>
-        <member name="M:Magdala.Grid.op_Addition(System.Single,Magdala.Grid)">
+        <member name="M:Magdala.Grid.op_Addition(System.Nullable{System.Single},Magdala.Grid)">
             <summary>
             Addition operation.
             </summary>
@@ -82,7 +99,7 @@
             <param name="grid2">Second grid.</param>
             <returns>Output grid.</returns>
         </member>
-        <member name="M:Magdala.Grid.op_Subtraction(Magdala.Grid,System.Single)">
+        <member name="M:Magdala.Grid.op_Subtraction(Magdala.Grid,System.Nullable{System.Single})">
             <summary>
             Subtraction operation.
             </summary>
@@ -90,7 +107,7 @@
             <param name="n">Number.</param>
             <returns>Output grid.</returns>
         </member>
-        <member name="M:Magdala.Grid.op_Subtraction(System.Single,Magdala.Grid)">
+        <member name="M:Magdala.Grid.op_Subtraction(System.Nullable{System.Single},Magdala.Grid)">
             <summary>
             Subtraction operation.
             </summary>
@@ -106,7 +123,7 @@
             <param name="grid2">Second grid.</param>
             <returns>Output grid.</returns>
         </member>
-        <member name="M:Magdala.Grid.op_Multiply(Magdala.Grid,System.Single)">
+        <member name="M:Magdala.Grid.op_Multiply(Magdala.Grid,System.Nullable{System.Single})">
             <summary>
             Multiplication operation.
             </summary>
@@ -114,7 +131,7 @@
             <param name="n">Number.</param>
             <returns>Output grid.</returns>
         </member>
-        <member name="M:Magdala.Grid.op_Multiply(System.Single,Magdala.Grid)">
+        <member name="M:Magdala.Grid.op_Multiply(System.Nullable{System.Single},Magdala.Grid)">
             <summary>
             Multiplication operation.
             </summary>
@@ -130,7 +147,7 @@
             <param name="grid2">Second grid.</param>
             <returns>Output grid.</returns>
         </member>
-        <member name="M:Magdala.Grid.op_Division(Magdala.Grid,System.Single)">
+        <member name="M:Magdala.Grid.op_Division(Magdala.Grid,System.Nullable{System.Single})">
             <summary>
             Division operation.
             </summary>
@@ -138,7 +155,7 @@
             <param name="n">Number.</param>
             <returns>Output grid.</returns>
         </member>
-        <member name="M:Magdala.Grid.op_Division(System.Single,Magdala.Grid)">
+        <member name="M:Magdala.Grid.op_Division(System.Nullable{System.Single},Magdala.Grid)">
             <summary>
             Division operation.
             </summary>
@@ -154,7 +171,7 @@
             <param name="grid2">Second grid.</param>
             <returns>Output grid.</returns>
         </member>
-        <member name="M:Magdala.Grid.op_Equality(Magdala.Grid,System.Single)">
+        <member name="M:Magdala.Grid.op_Equality(Magdala.Grid,System.Nullable{System.Single})">
             <summary>
             Equality operation.
             </summary>
@@ -162,7 +179,7 @@
             <param name="n">Number.</param>
             <returns>Output grid.</returns>
         </member>
-        <member name="M:Magdala.Grid.op_Equality(System.Single,Magdala.Grid)">
+        <member name="M:Magdala.Grid.op_Equality(System.Nullable{System.Single},Magdala.Grid)">
             <summary>
             Equality operation.
             </summary>
@@ -178,7 +195,7 @@
             <param name="grid2">Second grid.</param>
             <returns>Output grid.</returns>
         </member>
-        <member name="M:Magdala.Grid.op_Inequality(Magdala.Grid,System.Single)">
+        <member name="M:Magdala.Grid.op_Inequality(Magdala.Grid,System.Nullable{System.Single})">
             <summary>
             Inequality operation.
             </summary>
@@ -186,7 +203,7 @@
             <param name="n">Number.</param>
             <returns>Output grid.</returns>
         </member>
-        <member name="M:Magdala.Grid.op_Inequality(System.Single,Magdala.Grid)">
+        <member name="M:Magdala.Grid.op_Inequality(System.Nullable{System.Single},Magdala.Grid)">
             <summary>
             Inequality operation.
             </summary>
@@ -202,7 +219,7 @@
             <param name="grid2">Second grid.</param>
             <returns>Output grid.</returns>
         </member>
-        <member name="M:Magdala.Grid.op_GreaterThan(Magdala.Grid,System.Single)">
+        <member name="M:Magdala.Grid.op_GreaterThan(Magdala.Grid,System.Nullable{System.Single})">
             <summary>
             Greater than operation.
             </summary>
@@ -210,7 +227,7 @@
             <param name="n">Number.</param>
             <returns>Output grid.</returns>
         </member>
-        <member name="M:Magdala.Grid.op_GreaterThan(System.Single,Magdala.Grid)">
+        <member name="M:Magdala.Grid.op_GreaterThan(System.Nullable{System.Single},Magdala.Grid)">
             <summary>
             Greater than operation.
             </summary>
@@ -226,7 +243,7 @@
             <param name="grid2">Second grid.</param>
             <returns>Output grid.</returns>
         </member>
-        <member name="M:Magdala.Grid.op_LessThan(Magdala.Grid,System.Single)">
+        <member name="M:Magdala.Grid.op_LessThan(Magdala.Grid,System.Nullable{System.Single})">
             <summary>
             Less than operation.
             </summary>
@@ -234,7 +251,7 @@
             <param name="n">Number.</param>
             <returns>Output grid.</returns>
         </member>
-        <member name="M:Magdala.Grid.op_LessThan(System.Single,Magdala.Grid)">
+        <member name="M:Magdala.Grid.op_LessThan(System.Nullable{System.Single},Magdala.Grid)">
             <summary>
             Less than operation.
             </summary>
@@ -250,7 +267,7 @@
             <param name="grid2">Second grid.</param>
             <returns>Output grid.</returns>
         </member>
-        <member name="M:Magdala.Grid.op_GreaterThanOrEqual(Magdala.Grid,System.Single)">
+        <member name="M:Magdala.Grid.op_GreaterThanOrEqual(Magdala.Grid,System.Nullable{System.Single})">
             <summary>
             Greater than or equal to operation.
             </summary>
@@ -258,7 +275,7 @@
             <param name="n">Number.</param>
             <returns>Output grid.</returns>
         </member>
-        <member name="M:Magdala.Grid.op_GreaterThanOrEqual(System.Single,Magdala.Grid)">
+        <member name="M:Magdala.Grid.op_GreaterThanOrEqual(System.Nullable{System.Single},Magdala.Grid)">
             <summary>
             Greater than or equal to operation.
             </summary>
@@ -274,7 +291,7 @@
             <param name="grid2">Second grid.</param>
             <returns>Output grid.</returns>
         </member>
-        <member name="M:Magdala.Grid.op_LessThanOrEqual(Magdala.Grid,System.Single)">
+        <member name="M:Magdala.Grid.op_LessThanOrEqual(Magdala.Grid,System.Nullable{System.Single})">
             <summary>
             Less than or equal to operation.
             </summary>
@@ -282,7 +299,7 @@
             <param name="n">Number.</param>
             <returns>Output grid.</returns>
         </member>
-        <member name="M:Magdala.Grid.op_LessThanOrEqual(System.Single,Magdala.Grid)">
+        <member name="M:Magdala.Grid.op_LessThanOrEqual(System.Nullable{System.Single},Magdala.Grid)">
             <summary>
             Less than or equal to operation.
             </summary>
@@ -298,7 +315,7 @@
             <param name="grid2">Second grid.</param>
             <returns>Output grid.</returns>
         </member>
-        <member name="M:Magdala.Grid.op_Modulus(Magdala.Grid,System.Single)">
+        <member name="M:Magdala.Grid.op_Modulus(Magdala.Grid,System.Nullable{System.Single})">
             <summary>
             Modulus operation.
             </summary>
@@ -306,7 +323,7 @@
             <param name="n">Number.</param>
             <returns>Output grid.</returns>
         </member>
-        <member name="M:Magdala.Grid.op_Modulus(System.Single,Magdala.Grid)">
+        <member name="M:Magdala.Grid.op_Modulus(System.Nullable{System.Single},Magdala.Grid)">
             <summary>
             Modulus operation.
             </summary>
@@ -330,14 +347,14 @@
             <param name="grid2">Second grid.</param>
             <returns>Boolean grid.</returns>
         </member>
-        <member name="M:Magdala.Grid.Local(System.Func{System.Single,System.Single})">
+        <member name="M:Magdala.Grid.Local(System.Func{System.Nullable{System.Single},System.Nullable{System.Single}})">
             <summary>
             Provides local transformation.
             </summary>
             <param name="func">Transformation.</param>
             <returns>Transformed grid.</returns>
         </member>
-        <member name="M:Magdala.Grid.Local(Magdala.Grid,System.Func{System.Single,System.Single})">
+        <member name="M:Magdala.Grid.Local(Magdala.Grid,System.Func{System.Nullable{System.Single},System.Nullable{System.Single}})">
             <summary>
             Provides local transformation.
             </summary>
@@ -345,7 +362,7 @@
             <param name="func">Transformation.</param>
             <returns>Transformed grid.</returns>
         </member>
-        <member name="M:Magdala.Grid.Local(Magdala.Grid,Magdala.Grid,System.Func{System.Single,System.Single,System.Single})">
+        <member name="M:Magdala.Grid.Local(Magdala.Grid,Magdala.Grid,System.Func{System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single}})">
             <summary>
             Provides local transformation.
             </summary>
@@ -354,7 +371,7 @@
             <param name="func">Transformation.</param>
             <returns>Transformed grid.</returns>
         </member>
-        <member name="M:Magdala.Grid.Local(Magdala.Grid,Magdala.Grid,Magdala.Grid,System.Func{System.Single,System.Single,System.Single,System.Single})">
+        <member name="M:Magdala.Grid.Local(Magdala.Grid,Magdala.Grid,Magdala.Grid,System.Func{System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single}})">
             <summary>
             Provides local transformation.
             </summary>
@@ -373,7 +390,7 @@
             <param name="falseGrid">Value returned when the predicate evaluates to false.</param>
             <returns>Transformed grid.</returns>
         </member>
-        <member name="M:Magdala.Grid.Con(Magdala.Grid,Magdala.Grid,System.Single)">
+        <member name="M:Magdala.Grid.Con(Magdala.Grid,Magdala.Grid,System.Nullable{System.Single})">
             <summary>
             Provides conditional transformation.
             </summary>
@@ -382,7 +399,7 @@
             <param name="falseValue">Value returned when the predicate evaluates to false.</param>
             <returns>Transformed grid.</returns>
         </member>
-        <member name="M:Magdala.Grid.Con(Magdala.Grid,System.Single,Magdala.Grid)">
+        <member name="M:Magdala.Grid.Con(Magdala.Grid,System.Nullable{System.Single},Magdala.Grid)">
             <summary>
             Provides conditional transformation.
             </summary>
@@ -391,7 +408,7 @@
             <param name="falseGrid">Value returned when the predicate evaluates to false.</param>
             <returns>Transformed grid.</returns>
         </member>
-        <member name="M:Magdala.Grid.Con(Magdala.Grid,System.Single,System.Single)">
+        <member name="M:Magdala.Grid.Con(Magdala.Grid,System.Nullable{System.Single},System.Nullable{System.Single})">
             <summary>
             Provides conditional transformation.
             </summary>
@@ -400,7 +417,7 @@
             <param name="falseValue">Value returned when the predicate evaluates to false.</param>
             <returns>Transformed grid.</returns>
         </member>
-        <member name="M:Magdala.Grid.Focal(System.Func{System.Single[],System.Single},System.Byte,System.Boolean)">
+        <member name="M:Magdala.Grid.Focal(System.Func{System.Nullable{System.Single}[],System.Nullable{System.Single}},System.Byte,System.Boolean)">
             <summary>
             Provides focal transformation.
             </summary>
@@ -457,7 +474,7 @@
             <param name="circle">If set to true, excludes cells outside of the radius.</param>
             <returns>Transformed grid.</returns>
         </member>
-        <member name="M:Magdala.Grid.Focal(Magdala.Grid,System.Func{System.Single[],System.Single},System.Byte,System.Boolean)">
+        <member name="M:Magdala.Grid.Focal(Magdala.Grid,System.Func{System.Nullable{System.Single}[],System.Nullable{System.Single}},System.Byte,System.Boolean)">
             <summary>
             Provides focal transformation.
             </summary>
@@ -467,7 +484,7 @@
             <param name="circle">If set to true, excludes cells outside of the radius.</param>
             <returns>Transformed grid.</returns>
         </member>
-        <member name="M:Magdala.Grid.Focal(Magdala.Grid,Magdala.Grid,System.Func{System.Single[],System.Single[],System.Single},System.Byte,System.Boolean)">
+        <member name="M:Magdala.Grid.Focal(Magdala.Grid,Magdala.Grid,System.Func{System.Nullable{System.Single}[],System.Nullable{System.Single}[],System.Nullable{System.Single}},System.Byte,System.Boolean)">
             <summary>
             Provides focal transformation.
             </summary>
@@ -483,27 +500,13 @@
             Saves the grid.
             </summary>
             <param name="file">File name.</param>
-            <param name="preserveFloatPoint">If set to true, preserves floating-point cell values.</param>
+            <param name="floatingPoint">If set to true, preserves floating-point cell values.</param>
         </member>
         <member name="M:Magdala.Grid.Equals(System.Object)">
             <inheritdoc/>
         </member>
         <member name="M:Magdala.Grid.GetHashCode">
             <inheritdoc/>
-        </member>
-        <member name="M:Magdala.Grid.ToString">
-            <inheritdoc/>
-        </member>
-        <member name="M:Magdala.Grid.ToString(System.Int32,System.Int32,System.Int32,System.Int32,System.Func{System.Single,System.String})">
-            <summary>
-            Returns a string that represents the current object.
-            </summary>
-            <param name="xOff">X offset.</param>
-            <param name="yOff">Y offset.</param>
-            <param name="xSize">X size.</param>
-            <param name="ySize">Y size.</param>
-            <param name="replace">Replace function.</param>
-            <returns>A string that represents the current object.</returns>
         </member>
         <member name="T:Magdala.GridInfo">
             <summary>
@@ -520,9 +523,19 @@
             Gets the height.
             </summary>
         </member>
-        <member name="P:Magdala.GridInfo.GeoTransform">
+        <member name="P:Magdala.GridInfo.Origin">
             <summary>
-            Gets the geo transform.
+            Gets the origin.
+            </summary>
+        </member>
+        <member name="P:Magdala.GridInfo.PixelSize">
+            <summary>
+            Gets the pixel size.
+            </summary>
+        </member>
+        <member name="P:Magdala.GridInfo.Extent">
+            <summary>
+            Gets the extent.
             </summary>
         </member>
         <member name="P:Magdala.GridInfo.Projection">
