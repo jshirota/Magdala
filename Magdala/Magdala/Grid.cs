@@ -38,7 +38,7 @@ namespace Magdala
         {
             using var dataset = Gdal.Open(file, Access.GA_ReadOnly);
             this.Info = new GridInfo(dataset, band);
-            this.Rows = Readrows(dataset, band).ToArray();
+            this.Rows = ReadRows(dataset, band).ToArray();
         }
 
         internal Grid(GridInfo info, IEnumerable<IEnumerable<float?>> rows)
@@ -647,29 +647,56 @@ namespace Magdala
                     select (dx, dy)).ToArray();
         }
 
+        private static IEnumerable<float?[][]> Buffer(Grid grid, (int dx, int dy)[] neighbourhood)
+        {
+            var min = neighbourhood.Min(x => x.dy);
+            var max = neighbourhood.Max(x => x.dy);
+            var count = max - min + 1;
+            var empty = Enumerable.Repeat((float?)null, 10000).ToArray();
+            var queue = new Queue<float?[]>(Enumerable.Repeat(empty, -min));
+
+            void Enqueue(float?[] row)
+            {
+                queue.Enqueue(row);
+
+                if (queue.Count > count)
+                    queue.Dequeue();
+            }
+
+            foreach (var row in grid.Rows)
+            {
+                Enqueue(row);
+
+                if (queue.Count == count)
+                    yield return queue.ToArray();
+            }
+
+            for (var i = 0; i < max; i++)
+            {
+                Enqueue(empty);
+                yield return queue.ToArray();
+            }
+        }
+
         private static IEnumerable<float?[][]> Focal(Grid grid, (int dx, int dy)[] neighbourhood)
         {
-            for (var h = 0; h < grid.Info.Height; h++)
+            var width = grid.Info.Width;
+            var min = neighbourhood.Min(x => x.dy);
+            var deltas = neighbourhood.Select(x => (x.dx, dy: x.dy - min)).ToArray();
+
+            foreach (var rows in Buffer(grid, neighbourhood))
             {
                 var blocks = new List<float?[]>();
 
-                for (var w = 0; w < grid.Info.Width; w++)
+                for (var i = 0; i < width; i++)
                 {
                     var block = new List<float?>();
 
-                    foreach (var (dx, dy) in neighbourhood)
+                    foreach (var (dx, dy) in deltas)
                     {
-                        var x = w + dx;
-
-                        if (x > -1 && x < grid.Info.Width)
-                        {
-                            var y = h + dy;
-
-                            if (y > -1 && y < grid.Info.Height)
-                            {
-                                block.Add(grid.Rows[y][x]);
-                            }
-                        }
+                        var x = i + dx;
+                        if (x < 0 || x >= width) block.Add(null);
+                        else block.Add(rows[dy][x]);
                     }
 
                     blocks.Add(block.ToArray());
@@ -683,7 +710,7 @@ namespace Magdala
 
         #region IO
 
-        private static IEnumerable<float?[]> Readrows(Dataset dataset, int n)
+        private static IEnumerable<float?[]> ReadRows(Dataset dataset, int n)
         {
             var band = dataset.GetRasterBand(n);
             var width = band.XSize;
