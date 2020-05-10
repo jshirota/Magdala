@@ -703,15 +703,15 @@ namespace Magdala
         /// <summary>
         /// Saves the grid.
         /// </summary>
-        /// <param name="file">File name.</param>
-        /// <param name="floatingPoint">If set to true, preserves floating-point cell values.</param>
-        public void Save(string file, bool floatingPoint = false)
+        /// <param name="name">File name.</param>
+        /// <param name="driver">Driver.</param>
+        /// <param name="dataType">Data type.</param>
+        public void Save(string name, string driver, DataType dataType)
         {
             var width = this.Info.Width;
             var height = this.Info.Height;
-            var dataType = floatingPoint ? DataType.GDT_Float32 : DataType.GDT_Int16;
 
-            using var dataset = Gdal.GetDriverByName("GTiff").Create(file, width, height, 1, dataType, null);
+            using var dataset = Gdal.GetDriverByName(driver).Create(name, width, height, 1, dataType, null);
             dataset.SetGeoTransform(this.Info.GeoTransform);
             dataset.SetProjection(this.Info.Projection);
 
@@ -723,6 +723,16 @@ namespace Magdala
                 band.WriteRaster(0, h++, width, 1, row.Select(x => x.Value).ToArray(), width, 1, 0, 0);
 
             dataset.FlushCache();
+        }
+
+        /// <summary>
+        /// Saves the grid as a GeoTIFF file.
+        /// </summary>
+        /// <param name="name">File name.</param>
+        /// <param name="floatingPoint">If set to true, preserves floating-point cell values.</param>
+        public void Save(string name, bool floatingPoint = false)
+        {
+            this.Save(name, "GTiff", floatingPoint ? DataType.GDT_Float32 : DataType.GDT_Int16);
         }
 
         #endregion

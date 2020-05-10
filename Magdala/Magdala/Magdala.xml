@@ -495,11 +495,19 @@
             <param name="circle">If set to true, excludes cells outside of the radius.</param>
             <returns>Transformed grid.</returns>
         </member>
-        <member name="M:Magdala.Grid.Save(System.String,System.Boolean)">
+        <member name="M:Magdala.Grid.Save(System.String,System.String,OSGeo.GDAL.DataType)">
             <summary>
             Saves the grid.
             </summary>
-            <param name="file">File name.</param>
+            <param name="name">File name.</param>
+            <param name="driver">Driver.</param>
+            <param name="dataType">Data type.</param>
+        </member>
+        <member name="M:Magdala.Grid.Save(System.String,System.Boolean)">
+            <summary>
+            Saves the grid as a GeoTIFF file.
+            </summary>
+            <param name="name">File name.</param>
             <param name="floatingPoint">If set to true, preserves floating-point cell values.</param>
         </member>
         <member name="M:Magdala.Grid.Equals(System.Object)">
