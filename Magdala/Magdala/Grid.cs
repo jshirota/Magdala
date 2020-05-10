@@ -647,56 +647,32 @@ namespace Magdala
                     select (dx, dy)).ToArray();
         }
 
-        private static IEnumerable<float?[][]> Buffer(Grid grid, (int dx, int dy)[] neighbourhood)
-        {
-            var min = neighbourhood.Min(x => x.dy);
-            var max = neighbourhood.Max(x => x.dy);
-            var count = max - min + 1;
-            var empty = Enumerable.Repeat((float?)null, 10000).ToArray();
-            var queue = new Queue<float?[]>(Enumerable.Repeat(empty, -min));
-
-            void Enqueue(float?[] row)
-            {
-                queue.Enqueue(row);
-
-                if (queue.Count > count)
-                    queue.Dequeue();
-            }
-
-            foreach (var row in grid.Rows)
-            {
-                Enqueue(row);
-
-                if (queue.Count == count)
-                    yield return queue.ToArray();
-            }
-
-            for (var i = 0; i < max; i++)
-            {
-                Enqueue(empty);
-                yield return queue.ToArray();
-            }
-        }
-
         private static IEnumerable<float?[][]> Focal(Grid grid, (int dx, int dy)[] neighbourhood)
         {
             var width = grid.Info.Width;
-            var min = neighbourhood.Min(x => x.dy);
-            var deltas = neighbourhood.Select(x => (x.dx, dy: x.dy - min)).ToArray();
+            var height = grid.Info.Height;
 
-            foreach (var rows in Buffer(grid, neighbourhood))
+            for (var h = 0; h < height; h++)
             {
                 var blocks = new List<float?[]>();
 
-                for (var i = 0; i < width; i++)
+                for (var w = 0; w < width; w++)
                 {
                     var block = new List<float?>();
 
-                    foreach (var (dx, dy) in deltas)
+                    foreach (var (dx, dy) in neighbourhood)
                     {
-                        var x = i + dx;
-                        if (x < 0 || x >= width) block.Add(null);
-                        else block.Add(rows[dy][x]);
+                        var x = w + dx;
+
+                        if (x > -1 && x < width)
+                        {
+                            var y = h + dy;
+
+                            if (y > -1 && y < height)
+                            {
+                                block.Add(grid.Rows[y][x]);
+                            }
+                        }
                     }
 
                     blocks.Add(block.ToArray());
