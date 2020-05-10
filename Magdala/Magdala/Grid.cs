@@ -147,7 +147,7 @@ namespace Magdala
         /// <param name="grid">Grid.</param>
         /// <param name="n">Number.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator +(Grid grid, float? n) => Local(grid, x => x + n);
+        public static Grid operator +(Grid grid, double n) => Local(grid, x => x + (float)n);
 
         /// <summary>
         /// Addition operation.
@@ -155,7 +155,7 @@ namespace Magdala
         /// <param name="n">Number.</param>
         /// <param name="grid">Grid.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator +(float? n, Grid grid) => Local(grid, x => n + x);
+        public static Grid operator +(double n, Grid grid) => Local(grid, x => (float)n + x);
 
         /// <summary>
         /// Subtraction operation.
@@ -171,7 +171,7 @@ namespace Magdala
         /// <param name="grid">Grid.</param>
         /// <param name="n">Number.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator -(Grid grid, float? n) => Local(grid, x => x - n);
+        public static Grid operator -(Grid grid, double n) => Local(grid, x => x - (float)n);
 
         /// <summary>
         /// Subtraction operation.
@@ -179,7 +179,7 @@ namespace Magdala
         /// <param name="n">Number.</param>
         /// <param name="grid">Grid.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator -(float? n, Grid grid) => Local(grid, x => n - x);
+        public static Grid operator -(double n, Grid grid) => Local(grid, x => (float)n - x);
 
         /// <summary>
         /// Multiplication operation.
@@ -195,7 +195,7 @@ namespace Magdala
         /// <param name="grid">Grid.</param>
         /// <param name="n">Number.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator *(Grid grid, float? n) => Local(grid, x => x * n);
+        public static Grid operator *(Grid grid, double n) => Local(grid, x => x * (float)n);
 
         /// <summary>
         /// Multiplication operation.
@@ -203,7 +203,7 @@ namespace Magdala
         /// <param name="n">Number.</param>
         /// <param name="grid">Grid.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator *(float? n, Grid grid) => Local(grid, x => n * x);
+        public static Grid operator *(double n, Grid grid) => Local(grid, x => (float)n * x);
 
         /// <summary>
         /// Division operation.
@@ -219,7 +219,7 @@ namespace Magdala
         /// <param name="grid">Grid.</param>
         /// <param name="n">Number.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator /(Grid grid, float? n) => Local(grid, x => x / n);
+        public static Grid operator /(Grid grid, double n) => Local(grid, x => x / (float)n);
 
         /// <summary>
         /// Division operation.
@@ -227,7 +227,7 @@ namespace Magdala
         /// <param name="n">Number.</param>
         /// <param name="grid">Grid.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator /(float? n, Grid grid) => Local(grid, x => n / x);
+        public static Grid operator /(double n, Grid grid) => Local(grid, x => (float)n / x);
 
         /// <summary>
         /// Equality operation.
@@ -243,7 +243,7 @@ namespace Magdala
         /// <param name="grid">Grid.</param>
         /// <param name="n">Number.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator ==(Grid grid, float? n) => Local(grid, x => x == n ? 1 : 0);
+        public static Grid operator ==(Grid grid, double n) => Local(grid, x => x == n ? 1 : 0);
 
         /// <summary>
         /// Equality operation.
@@ -251,7 +251,7 @@ namespace Magdala
         /// <param name="n">Number.</param>
         /// <param name="grid">Grid.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator ==(float? n, Grid grid) => Local(grid, x => n == x ? 1 : 0);
+        public static Grid operator ==(double n, Grid grid) => Local(grid, x => n == x ? 1 : 0);
 
         /// <summary>
         /// Inequality operation.
@@ -267,7 +267,7 @@ namespace Magdala
         /// <param name="grid">Grid.</param>
         /// <param name="n">Number.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator !=(Grid grid, float? n) => Local(grid, x => x != n ? 1 : 0);
+        public static Grid operator !=(Grid grid, double n) => Local(grid, x => x != n ? 1 : 0);
 
         /// <summary>
         /// Inequality operation.
@@ -275,7 +275,7 @@ namespace Magdala
         /// <param name="n">Number.</param>
         /// <param name="grid">Grid.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator !=(float? n, Grid grid) => Local(grid, x => n != x ? 1 : 0);
+        public static Grid operator !=(double n, Grid grid) => Local(grid, x => n != x ? 1 : 0);
 
         /// <summary>
         /// Greater than operation.
@@ -291,7 +291,7 @@ namespace Magdala
         /// <param name="grid">Grid.</param>
         /// <param name="n">Number.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator >(Grid grid, float? n) => Local(grid, x => x > n ? 1 : 0);
+        public static Grid operator >(Grid grid, double n) => Local(grid, x => x > n ? 1 : 0);
 
         /// <summary>
         /// Greater than operation.
@@ -299,7 +299,7 @@ namespace Magdala
         /// <param name="n">Number.</param>
         /// <param name="grid">Grid.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator >(float? n, Grid grid) => Local(grid, x => n > x ? 1 : 0);
+        public static Grid operator >(double n, Grid grid) => Local(grid, x => n > x ? 1 : 0);
 
         /// <summary>
         /// Less than operation.
@@ -315,7 +315,7 @@ namespace Magdala
         /// <param name="grid">Grid.</param>
         /// <param name="n">Number.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator <(Grid grid, float? n) => Local(grid, x => x < n ? 1 : 0);
+        public static Grid operator <(Grid grid, double n) => Local(grid, x => x < n ? 1 : 0);
 
         /// <summary>
         /// Less than operation.
@@ -323,7 +323,7 @@ namespace Magdala
         /// <param name="n">Number.</param>
         /// <param name="grid">Grid.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator <(float? n, Grid grid) => Local(grid, x => n < x ? 1 : 0);
+        public static Grid operator <(double n, Grid grid) => Local(grid, x => n < x ? 1 : 0);
 
         /// <summary>
         /// Greater than or equal to operation.
@@ -339,7 +339,7 @@ namespace Magdala
         /// <param name="grid">Grid.</param>
         /// <param name="n">Number.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator >=(Grid grid, float? n) => Local(grid, x => x >= n ? 1 : 0);
+        public static Grid operator >=(Grid grid, double n) => Local(grid, x => x >= n ? 1 : 0);
 
         /// <summary>
         /// Greater than or equal to operation.
@@ -347,7 +347,7 @@ namespace Magdala
         /// <param name="n">Number.</param>
         /// <param name="grid">Grid.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator >=(float? n, Grid grid) => Local(grid, x => n >= x ? 1 : 0);
+        public static Grid operator >=(double n, Grid grid) => Local(grid, x => n >= x ? 1 : 0);
 
         /// <summary>
         /// Less than or equal to operation.
@@ -363,7 +363,7 @@ namespace Magdala
         /// <param name="grid">Grid.</param>
         /// <param name="n">Number.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator <=(Grid grid, float? n) => Local(grid, x => x <= n ? 1 : 0);
+        public static Grid operator <=(Grid grid, double n) => Local(grid, x => x <= n ? 1 : 0);
 
         /// <summary>
         /// Less than or equal to operation.
@@ -371,7 +371,7 @@ namespace Magdala
         /// <param name="n">Number.</param>
         /// <param name="grid">Grid.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator <=(float? n, Grid grid) => Local(grid, x => n <= x ? 1 : 0);
+        public static Grid operator <=(double n, Grid grid) => Local(grid, x => n <= x ? 1 : 0);
 
         /// <summary>
         /// Modulus operation.
@@ -387,7 +387,7 @@ namespace Magdala
         /// <param name="grid">Grid.</param>
         /// <param name="n">Number.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator %(Grid grid, float? n) => Local(grid, x => x % n);
+        public static Grid operator %(Grid grid, double n) => Local(grid, x => x % (float)n);
 
         /// <summary>
         /// Modulus operation.
@@ -395,7 +395,7 @@ namespace Magdala
         /// <param name="n">Number.</param>
         /// <param name="grid">Grid.</param>
         /// <returns>Output grid.</returns>
-        public static Grid operator %(float? n, Grid grid) => Local(grid, x => n % x);
+        public static Grid operator %(double n, Grid grid) => Local(grid, x => (float)n % x);
 
         /// <summary>
         /// Logical "AND" operation.

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -54,6 +55,76 @@ namespace UnitTest
                 .ToList();
 
             Assert.IsTrue(actual.SequenceEqual(expected));
+        }
+
+        static float[] Values(Grid grid)
+        {
+            return grid.Rows.SelectMany(x => x).Select(x => x.Value).ToArray();
+        }
+
+        [TestMethod]
+        public void Add()
+        {
+            var grid1 = this.life;
+            var grid2 = grid1 + 1;
+            var grid3 = -3 + grid1;
+            var grid4 = grid1 + grid3;
+
+            Assert.IsTrue(Values(grid1).Select(x => x + 1).SequenceEqual(Values(grid2)));
+            Assert.IsTrue(Values(grid1).Select(x => -3 + x).SequenceEqual(Values(grid3)));
+            Assert.IsTrue(Values(grid1).Zip(Values(grid3), (x, y) => x + y).SequenceEqual(Values(grid4)));
+        }
+
+        [TestMethod]
+        public void Subtract()
+        {
+            var grid1 = this.life;
+            var grid2 = grid1 - 4;
+            var grid3 = 10 - grid1;
+            var grid4 = grid1 - grid3;
+
+            Assert.IsTrue(Values(grid1).Select(x => x - 4).SequenceEqual(Values(grid2)));
+            Assert.IsTrue(Values(grid1).Select(x => 10 - x).SequenceEqual(Values(grid3)));
+            Assert.IsTrue(Values(grid1).Zip(Values(grid3), (x, y) => x - y).SequenceEqual(Values(grid4)));
+        }
+
+        [TestMethod]
+        public void Multiply()
+        {
+            var grid1 = this.life;
+            var grid2 = grid1 * 9;
+            var grid3 = 7 * grid1;
+            var grid4 = grid1 * grid2;
+
+            Assert.IsTrue(Values(grid1).Select(x => x * 9).SequenceEqual(Values(grid2)));
+            Assert.IsTrue(Values(grid1).Select(x => 7 * x).SequenceEqual(Values(grid3)));
+            Assert.IsTrue(Values(grid1).Zip(Values(grid2), (x, y) => x * y).SequenceEqual(Values(grid4)));
+        }
+
+        [TestMethod]
+        public void Divide()
+        {
+            var grid1 = this.life;
+            var grid2 = grid1 / 9;
+            var grid3 = 7 / grid1;
+            var grid4 = grid1 / grid2;
+
+            Assert.IsTrue(Values(grid1).Select(x => x / 9).SequenceEqual(Values(grid2)));
+            Assert.IsTrue(Values(grid1).Select(x => 7 / x).SequenceEqual(Values(grid3)));
+            Assert.IsTrue(Values(grid1).Zip(Values(grid2), (x, y) => x / y).SequenceEqual(Values(grid4)));
+        }
+
+        [TestMethod]
+        public void Mod()
+        {
+            var grid1 = this.life;
+            var grid2 = (grid1 * 123) % 7;
+            var grid3 = 3456 % (grid1 * 13);
+            var grid4 = grid1 % grid2;
+
+            Assert.IsTrue(Values(grid1).Select(x => (x * 123) % 7).SequenceEqual(Values(grid2)));
+            Assert.IsTrue(Values(grid1).Select(x => 3456 % (x * 13)).SequenceEqual(Values(grid3)));
+            Assert.IsTrue(Values(grid1).Zip(Values(grid2), (x, y) => x % y).SequenceEqual(Values(grid4)));
         }
     }
 }
