@@ -51,13 +51,13 @@ namespace UnitTest
             Assert.IsTrue(actual.SequenceEqual(expected));
         }
 
-        static Grid Tick(Grid grid)
+        private static Grid Tick(Grid grid)
         {
             var g = grid.FocalSum(1) - grid;
             return grid == 1 & g == 2 | g == 3;
         }
 
-        static float[] Values(Grid grid)
+        private static float[] Values(Grid grid)
         {
             return grid.Rows.SelectMany(x => x).Select(x => x.Value).ToArray();
         }
