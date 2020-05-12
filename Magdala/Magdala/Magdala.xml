@@ -115,6 +115,13 @@
             <param name="grid">Grid.</param>
             <returns>Output grid.</returns>
         </member>
+        <member name="M:Magdala.Grid.op_UnaryNegation(Magdala.Grid)">
+            <summary>
+            Subtraction operation.
+            </summary>
+            <param name="grid">Grid.</param>
+            <returns>Output grid.</returns>
+        </member>
         <member name="M:Magdala.Grid.op_Multiply(Magdala.Grid,Magdala.Grid)">
             <summary>
             Multiplication operation.
@@ -345,6 +352,13 @@
             </summary>
             <param name="grid1">First grid.</param>
             <param name="grid2">Second grid.</param>
+            <returns>Boolean grid.</returns>
+        </member>
+        <member name="M:Magdala.Grid.op_LogicalNot(Magdala.Grid)">
+            <summary>
+            Negation operation.
+            </summary>
+            <param name="grid">Grid.</param>
             <returns>Boolean grid.</returns>
         </member>
         <member name="M:Magdala.Grid.Local(System.Func{System.Nullable{System.Single},System.Nullable{System.Single}})">
